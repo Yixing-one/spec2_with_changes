@@ -74,12 +74,12 @@ case class FileSystem(logger: Logger) extends FilePathReader:
     val zis = new ZipInputStream(new BufferedInputStream(uis))
 
     @annotation.tailrec
-    def extractEntry(entry: ZipEntry): Unit =
+    def extractEntry(entry: ZipEntry|Null): Unit =
       if entry != null then
-        val matcher = regex.matcher(entry.getName)
+        val matcher = regex.matcher(entry.nn.getName)
         if matcher.matches then
           val target = matcher.replaceFirst(s"${quoteReplacement(dest.path)}$$1")
-          if !entry.isDirectory then
+          if !entry.nn.isDirectory then
             new File(target).getParentFile.mkdirs
             new File(target).createNewFile
             val fos = new FileOutputStream(target)

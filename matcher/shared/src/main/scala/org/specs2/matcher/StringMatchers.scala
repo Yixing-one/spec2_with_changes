@@ -46,18 +46,18 @@ trait StringMatchers:
     be_!=/(s)
 
   /** matches if (b contains a) */
-  def contain(t: String): Matcher[String] =
+  def contain(t: String|Null): Matcher[String] =
     new Matcher[String]:
       def apply[S <: String](b: Expectable[S]) =
-        val a = t
-        result(a != null && b.value != null && b.value.contains(a), b.description + " doesn't contain " + q(a))
+        val a: String|Null = t
+        result(a != null && b.value != null && b.value.contains(a.nn), b.description + " doesn't contain " + q(a.nn))
 
   /** matches if (b contains a) */
   def contain(t: Char): Matcher[String] =
     new Matcher[String]:
       def apply[S <: String](b: Expectable[S]) =
         val a = t
-        result(b.value != null && b.value.contains(a), b.description + " doesn't contain " + q(a))
+        result(b.value != null && b.value.nn.contains(a), b.description + " doesn't contain " + q(a))
 
   /** matches if b matches the regular expression a */
   def beMatching[T: MatchingExpression](t: =>T): Matcher[String] =
@@ -79,14 +79,14 @@ trait StringMatchers:
   def startWith(a: String): Matcher[String] =
     new Matcher[String]:
       def apply[S <: String](b: Expectable[S]) =
-        result(b.value != null && a != null && b.value.startsWith(a), s"${b.description} doesn't start with ${q(a)}")
+        result(b.value != null && a != null && b.value.nn.startsWith(a), s"${b.description} doesn't start with ${q(a)}")
 
   /** matches if b.endsWith(a) */
   def endWith(t: =>String): Matcher[String] =
     new Matcher[String]:
       def apply[S <: String](b: Expectable[S]) =
         val a = t
-        result(b.value != null && a != null && b.value.endsWith(a), b.description + " doesn't end with " + q(a))
+        result(b.value != null && a != null && b.value.nn.endsWith(a), b.description + " doesn't end with " + q(a))
 
   /** matches if the regexp a is found inside b */
   def find(a: =>String): FindMatcher =
@@ -110,7 +110,7 @@ trait StringMatchers:
     def withGroups(groups: String*) = new FindMatcherWithGroups(t, groups*)
     def apply[S <: String](b: Expectable[S]) =
       val a = t
-      result(a != null && b.value != null && pattern.matcher(b.value).find, q(a) + " isn't found in " + b.description)
+      result(t != null && b.value != null && pattern.matcher(b.value.nn).find, q(a) + " isn't found in " + b.description)
 
   /** Matcher to find if the pattern p is found inside b.
     */
@@ -145,9 +145,10 @@ trait StringMatchers:
       def foundText =
         if groupsFound.isEmpty then ". Found nothing"
         else ". Found: " + q(groupsFound.mkString(", "))
-      val groupsToFind = if groups == null then Nil else groups.toList
+      //groups == null
+      val groupsToFind = if groups.size != 0 then Nil else groups.toList
       result(
-        a != null && b.value != null && groupsFound == groupsToFind,
+        t != null && b.value != null && groupsFound == groupsToFind,
         q(a) + " isn't found in " + b.description + withGroups + q(groupsToFind.mkString(", ")) + foundText
       )
 

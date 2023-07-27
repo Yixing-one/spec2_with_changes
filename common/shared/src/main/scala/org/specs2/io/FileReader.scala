@@ -8,25 +8,25 @@ import java.io.*
 trait FileReader:
 
   /** @return true if the file exists */
-  def exists(path: String) = path != null && new File(path).exists
+  def exists(path: String|Null) = path != null && new File(path.nn).exists
 
   /** @return true if the file can be read */
-  def canRead(path: String) = path != null && new File(path).canRead
+  def canRead(path: String|Null) = path != null && new File(path.nn).canRead
 
   /** @return true if the file can be written */
-  def canWrite(path: String) = path != null && new File(path).canWrite
+  def canWrite(path: String|Null) = path != null && new File(path.nn).canWrite
 
   /** @return true if the file is absolute */
-  def isAbsolute(path: String) = path != null && new File(path).isAbsolute
+  def isAbsolute(path: String|Null) = path != null && new File(path.nn).isAbsolute
 
   /** @return true if the file is a file */
-  def isFile(path: String) = path != null && new File(path).isFile
+  def isFile(path: String|Null) = path != null && new File(path.nn).isFile
 
   /** @return true if the file is a directory */
-  def isDirectory(path: String) = path != null && new File(path).isDirectory
+  def isDirectory(path: String|Null) = path != null && new File(path.nn).isDirectory
 
   /** @return true if the file is hidden */
-  def isHidden(path: String) = path != null && new File(path).isHidden
+  def isHidden(path: String|Null) = path != null && new File(path.nn).isHidden
 
   /** @return the file name */
   def getName(path: String) = new File(path).getName

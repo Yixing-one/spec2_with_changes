@@ -21,7 +21,7 @@ case class Expectable[+T] private[specs2] (
 ) { outer =>
 
   /** the value is only evaluated if necessary */
-  lazy val value =
+  lazy val value: T|Null =
     actual()
 
   /** definition of the value, possibly evaluating to different results each time it is invoked */
@@ -44,7 +44,7 @@ case class Expectable[+T] private[specs2] (
     */
   def applyMatcher[S >: T](m: =>Matcher[S]): Result =
     val matcher = m
-    if matcher == null then throw new IllegalArgumentException(s"You cannot use a null matcher on '$description'")
+    if m == null then throw new IllegalArgumentException(s"You cannot use a null matcher on '$description'")
     checker.check(matcher(this))
 
   /** evaluate the value and return the same expectable */
